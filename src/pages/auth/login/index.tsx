@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "../../../api/admin";
+
 import { useNavigate } from "react-router";
+import { useLogin } from "../../../react-query/mutation/auth";
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
@@ -14,17 +14,22 @@ const Login: React.FC = () => {
     setClientReady(true);
   }, []);
 
-  const mutation = useMutation({
-    mutationKey: ["login"],
-    mutationFn: login,
-    onSuccess: (data) => {
-      console.log("User signed in:", data);
-      navigate("/");
-    },
-  });
+  const handleSuccess = () => {
+    navigate("/");
+  };
+
+  const { mutate } = useLogin(handleSuccess);
+  // const mutation = useMutation({
+  //   mutationKey: ["login"],
+  //   mutationFn: login,
+  //   onSuccess: (data) => {
+  //     console.log("User signed in:", data);
+  //     navigate("/");
+  //   },
+  // });
   const onFinish = (values: { email: string; password: string }) => {
     console.log("Finish:", values);
-    mutation.mutate(values);
+    mutate(values);
   };
 
   return (

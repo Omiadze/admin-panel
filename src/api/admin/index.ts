@@ -3,7 +3,7 @@ import { supabase } from "../../supabase";
 export type User = {
   id: string;
   aud: string;
-  role: string;
+  role?: string;
   email: string;
   email_confirmed_at: string;
   phone: string;
@@ -18,7 +18,7 @@ export type User = {
   created_at: string;
   updated_at: string;
   is_anonymous: boolean;
-};
+} | null;
 
 export const getUsersListInAdmin = () => {
   return supabase.auth.admin.listUsers().then((res) => {
@@ -33,8 +33,11 @@ export const updateUserInAdmin = (
   return supabase.auth.admin.updateUserById(id, { ...payload });
 };
 
-export const getSigngleUserInAdmin = (id: string) => {
+export const getSigngleUserInAdmin = (id: string): Promise<User> => {
   return supabase.auth.admin.getUserById(id).then((res) => {
+    if (!res.data.user) {
+      return null;
+    }
     return res.data.user;
   });
 };

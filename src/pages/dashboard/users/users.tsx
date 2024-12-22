@@ -1,20 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-
-import { getUsersListInAdmin } from "../../../api/admin";
 import { Button, Table } from "antd";
-import { mapUsersListForAdmin } from "./utils";
+import { mapUsersListForAdmin } from "../utils";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import Loading from "../../../components/loading";
+import { useGetUsersListInAdminv } from "../../../react-query/query/dashboard/users";
 
 const { Column } = Table;
 
 const UsersPage = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["users"],
-    queryFn: getUsersListInAdmin,
+  const { data, isLoading, isError } = useGetUsersListInAdminv({
+    queryOptions: { select: mapUsersListForAdmin },
   });
-  const mappedUsers = data ? mapUsersListForAdmin(data) : [];
+  // const mappedUsers = data ? mapUsersListForAdmin(data) : [];
   const navigate = useNavigate();
   const handleUpdate = (id: string | number) => {
     navigate(`/users/update/${id}`);
@@ -31,7 +28,7 @@ const UsersPage = () => {
         <PlusOutlined />
         Add Users
       </Button>
-      <Table bordered dataSource={mappedUsers}>
+      <Table bordered dataSource={data}>
         <Column title="Email" dataIndex="email" />
         <Column title="Created At" dataIndex="createdAt" />
         <Column title="Phone" dataIndex="phone" />

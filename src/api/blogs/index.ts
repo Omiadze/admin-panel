@@ -28,7 +28,7 @@ export const getBlogs = async (): Promise<blogs[]> => {
   return data as blogs[];
 };
 
-export const getSingleBlog = async (id: string): Promise<blogs | null> => {
+export const getSingleBlog = async (id: string): Promise<blogs> => {
   const { data, error } = await supabase
     .from("Blogs")
     .select("*")

@@ -1,17 +1,20 @@
 import { useParams } from "react-router";
 import FormPage from "../../components/form/update";
-import { getSigngleUserInAdmin } from "../../../../../api/admin";
-import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../../components/loading";
+import { useGetSingleUserInAdmin } from "../../../../../react-query/query/dashboard/users";
 
 const UsersUpdateView = () => {
   const { id } = useParams();
-  console.log(id);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", id],
-    queryFn: () => getSigngleUserInAdmin(id as string),
-    enabled: !!id,
+  const { data, isLoading, isError } = useGetSingleUserInAdmin({
+    id: id || "",
+    queryOptions: {
+      select: (user) => ({
+        phone: user.phone,
+        email: user.email,
+        // Additional transformations if needed
+      }),
+    },
   });
 
   if (isError) {

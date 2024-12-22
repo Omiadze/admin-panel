@@ -1,17 +1,19 @@
 import { useParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 import BlogFormPage from "../../components/form/update";
-import { getSingleBlog } from "../../../../../api/blogs";
 import Loading from "../../../../../components/loading";
+import { useGetBlogById } from "../../../../../react-query/query/dashboard/blogs";
 
 const BlogsUpdateView = () => {
   const { id } = useParams();
 
-  // Fetch blog data by ID
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["blog", id],
-    queryFn: () => getSingleBlog(id as string),
-    enabled: !!id,
+  const { data, isLoading, isError } = useGetBlogById({
+    id: id || "",
+    queryOptions: {
+      select: (blog) => ({
+        title_en: blog.title_en,
+        description_en: blog.description_en,
+      }),
+    },
   });
 
   if (isLoading) {
